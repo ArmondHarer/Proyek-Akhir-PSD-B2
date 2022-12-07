@@ -22,14 +22,13 @@ BEGIN
 
     tb_proc : PROCESS
     BEGIN
-        INP <= "01000001";
+        INP <= "01001011";
         WAIT FOR 10 ps;
-        INP <= "01000010";
-        WAIT FOR 10 ps;
-        INP <= "01000011";
-        WAIT FOR 10 ps;
-        INP <= "01000100";
-        WAIT FOR 10 ps;
+        FOR i IN 65 TO 90 LOOP
+            REPORT "i=" & INTEGER'image(i);
+            INP <= STD_LOGIC_VECTOR(to_unsigned(i, INP'length));
+            WAIT FOR 10 ps;
+        END LOOP;
         WAIT;
     END PROCESS;
 END ARCHITECTURE;
