@@ -39,7 +39,6 @@ BEGIN
 		CASE currState IS
 			WHEN scramble =>
 				-- Scramble the input based on the current offset and 
-
 				-- Move to next state after scrambling
 				currState <= rotate;
 			WHEN rotate =>
