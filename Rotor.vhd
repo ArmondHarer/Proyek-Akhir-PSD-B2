@@ -51,5 +51,7 @@ BEGIN
 		END CASE;
 		letterOut <= STD_LOGIC_VECTOR(to_unsigned(currInput, letterOut'LENGTH));
 	END PROCESS;
+	-- case
+	-- case, output <= ROTOR_A(case mod 65)
 
 END ARCHITECTURE rtl;
