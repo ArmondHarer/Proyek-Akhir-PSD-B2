@@ -8,6 +8,7 @@ USE work.EnigmaTypes.ALL;
 ENTITY RotorAndReflector IS
     PORT (
         input : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        output_rotor : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
         output : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 END ENTITY;
@@ -39,8 +40,8 @@ ARCHITECTURE rtl OF RotorAndReflector IS
 BEGIN
     rotor_right : Rotor
     GENERIC MAP(1, 0, '1')
-    PORT MAP(rotor_map => ROTOR_A, direction => 1, letterIn => input, letterOut => reflectorBuffer);
-
+    PORT MAP(rotor_map => ROTOR_A, direction => '0', letterIn => input, letterOut => reflectorBuffer);
+    output_rotor <= reflectorBuffer;
     reflector_unit : Reflector
     PORT MAP(letterin => reflectorBuffer, letterout => output);
 
