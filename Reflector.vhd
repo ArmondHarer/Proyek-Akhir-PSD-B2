@@ -60,7 +60,7 @@ begin
         end case;
         
             
-    end process;
+    end process;    
       
             
 
