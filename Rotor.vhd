@@ -70,7 +70,7 @@ BEGIN
 					WHEN ALPHABETS(23) => letterOut <= ROTOR_A(23);
 					WHEN ALPHABETS(24) => letterOut <= ROTOR_A(24);
 					WHEN ALPHABETS(25) => letterOut <= ROTOR_A(25);
-					WHEN OTHERS => REPORT "Out of bounds" SEVERITY failure;
+					WHEN OTHERS => letterOut <= ROTOR_A(0);
 				END CASE;
 			END IF;
 			-- If direction is backwards
@@ -104,7 +104,7 @@ BEGIN
 					WHEN ROTOR_A(23) => letterOut <= ALPHABETS(23);
 					WHEN ROTOR_A(24) => letterOut <= ALPHABETS(24);
 					WHEN ROTOR_A(25) => letterOut <= ALPHABETS(25);
-					WHEN OTHERS => REPORT "Out of bounds" SEVERITY failure;
+					WHEN OTHERS => letterOut <= ALPHABETS(0);
 				END CASE;
 			END IF;
 		END IF;
