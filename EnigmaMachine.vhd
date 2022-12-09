@@ -11,6 +11,7 @@ entity EnigmaMachine is
         readWrite: IN std_logic;
         plugboard_write: IN STD_LOGIC_VECTOR(7 downto 0);
         letter_out: OUT std_logic_vector(7 DOWNTO 0);
+        letter_write: out std_logic_vector(7 downto 0);
         Segment_out : out std_logic_vector(15 downto 0);
         error: OUT std_logic
 
@@ -61,13 +62,13 @@ architecture rtl of EnigmaMachine is
 
 begin
     data_input: Keyboard 
-        port map(CLK => CLK, data_in => data_input, Data_out => bufferKeyboardOutput);
+        port map(CLK => CLK, data_in => letter_in, Data_out => bufferKeyboardOutput);
     plugboard_input: Plugboard 
         port map(clk => CLK, readWrite => readWrite, letter_in => bufferKeyboardOutput, letter_write => plugboard_write, letter_out => bufferPlugboardOutput);
     rotorAndReflector_input: RotorAndReflector
         port map(bufferPlugboardOutput, bufferRotorAndReflectorOutput);
     Sixteen_Segment_input: Enigma_16segment_decoder
-        port map(D => bufferRotorAndReflectorOutput, Segment_out);
+        port map(D => bufferRotorAndReflectorOutput, Segment_out => Segment_out);
     
     letter_out <= bufferRotorAndReflectorOutput;
     
