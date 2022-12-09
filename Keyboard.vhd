@@ -23,7 +23,7 @@ begin
                 error <= '0';
             else
                 error <= '1';
-                Data_out(7 downto 0) <= '0';
+                Data_out(7 downto 0) <= "00000000";
             end if;
         end if;
     end process;
