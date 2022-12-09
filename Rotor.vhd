@@ -26,10 +26,10 @@ ARCHITECTURE rtl OF Rotor IS
 	CONSTANT ROTOR_C : ROTOR_CONFIG := ROTOR_C_MAP;
 	CONSTANT ALPHABETS : ALPHABET_IN_BITS := ALPHABET_LETTERS;
 	SIGNAL ROTOR_MAP : ROTOR_CONFIG;
+	SIGNAL offset : INTEGER RANGE 0 TO 25 := 0;
 
 BEGIN
-	PROCESS (letterIn, ROTOR_MAP)
-		VARIABLE offset : INTEGER RANGE 0 TO 25 := 0;
+	PROCESS (letterIn, ROTOR_MAP, offset)
 	BEGIN
 		-- Initialize output
 		letterOut <= (OTHERS => '0');
@@ -55,10 +55,9 @@ BEGIN
 		ELSE
 			FOR idx IN 0 TO 25 LOOP
 				IF letterIn = ROTOR_MAP(idx) THEN
-					letterOut <= ALPHABETS((idx + offset) MOD 26);
+					letterOut <= ALPHABETS((idx - offset) MOD 26);
 				END IF;
 			END LOOP;
 		END IF;
-
 	END PROCESS;
 END ARCHITECTURE rtl;

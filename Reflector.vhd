@@ -4,6 +4,7 @@ USE IEEE.NUMERIC_STD.ALL;
 USE ieee.std_logic_textio.ALL;
 
 USE work.EnigmaTypes.ALL;
+USE work.EnigmaConstants.ALL;
 
 ENTITY Reflector IS
     PORT (
@@ -17,7 +18,6 @@ BEGIN
     PROCESS (letterIn)
     BEGIN
         letterOut <= (OTHERS => '0');
-        letterToInt <= to_integer(unsigned(letterIn));
         CASE letterIn IS
                 --IN    ABCDEFGHIJKLMNOPQRSTUVWXYZ
                 --OUT   EJMZALYXVBWFCRQUONTSPIKHGD
