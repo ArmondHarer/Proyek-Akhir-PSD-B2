@@ -3,3 +3,7 @@
 transcript
 *.wlf
 /work
+/*db
+/output_files
+*.qpf
+*.qsf

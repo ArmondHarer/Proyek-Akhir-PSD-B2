@@ -64,5 +64,4 @@ BEGIN
         GENERIC MAP(initialPos => 1, notchPos => 0, firstRotor => '1')
         PORT MAP(rotor_type => "00", direction => '1', letterIn => revRotorBufferMid, letterOut => revRotorBufferRight);
     output <= revRotorBufferRight;
-
 END ARCHITECTURE;
