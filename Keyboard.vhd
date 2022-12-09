@@ -18,10 +18,12 @@ begin
     process(CLK) is
     begin
         if(rising_edge(CLK)) then
-            if(unsigned(Data_in) >= 65 or unsigned(Data_in) <= 90) then
+            if(unsigned(Data_in) >= 65 and unsigned(Data_in) <= 90) then
                 Data_out <= Data_in;
+                error <= '0';
             else
-                error <= 1;
+                error <= '1';
+                Data_out(7 downto 0) <= '0';
             end if;
         end if;
     end process;
