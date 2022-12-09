@@ -8,7 +8,7 @@ USE work.EnigmaTypes.ALL;
 entity Plugboard is
     port (
         clk   : in std_logic;
-        readwrite : in std_logic;
+        --readwrite : in std_logic;
         letter_in  : in  std_logic_vector(7 downto 0) := "01000001";
 	letter_out : out std_logic_vector(7 downto 0)
     );
