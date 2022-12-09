@@ -28,7 +28,7 @@ ARCHITECTURE rtl OF Rotor IS
 	SIGNAL ROTOR_MAP : ROTOR_CONFIG;
 
 BEGIN
-	PROCESS (letterIn)
+	PROCESS (letterIn, ROTOR_MAP)
 		VARIABLE offset : INTEGER RANGE 0 TO 25 := 0;
 	BEGIN
 		-- Initialize output
@@ -39,6 +39,8 @@ BEGIN
 			ROTOR_MAP <= ROTOR_B;
 		ELSIF rotor_type = "10" THEN
 			ROTOR_MAP <= ROTOR_C;
+		ELSE
+			ROTOR_MAP <= ROTOR_A;
 		END IF;
 
 		-- If direction is '0' or forward

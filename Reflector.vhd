@@ -3,6 +3,8 @@ USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 USE ieee.std_logic_textio.ALL;
 
+USE work.EnigmaTypes.ALL;
+
 ENTITY Reflector IS
     PORT (
         --Input and outputs are in ASCII binary
@@ -10,7 +12,7 @@ ENTITY Reflector IS
         letterOut : OUT STD_LOGIC_VECTOR(7 DOWNTO 0));
 END Reflector;
 ARCHITECTURE rtl OF Reflector IS
-    SIGNAL letterToInt : INTEGER;
+    CONSTANT REFLECTOR_MAP : ROTOR_CONFIG := REFLECTOR_PAIR_MAP;
 BEGIN
     PROCESS (letterIn)
     BEGIN
