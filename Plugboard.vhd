@@ -8,10 +8,9 @@ entity Plugboard is
     port (
         clk   : in std_logic;
         readwrite : in std_logic;
-
         letter_in  : in  std_logic_vector(7 downto 0); 
-        letter_write  : in  std_logic_vector(7 downto 0);
-		letter_out : out std_logic_vector(7 downto 0)
+	    
+	letter_out : out std_logic_vector(7 downto 0)
     );
 end entity Plugboard;
 
