@@ -45,7 +45,7 @@ BEGIN
             WHEN "01011000" => letterOut <= "01001000";
             WHEN "01011001" => letterOut <= "01000111";
             WHEN "01011010" => letterOut <= "01000100";
-            WHEN OTHERS => REPORT "Out of bounds: " & INTEGER'image(letterToInt) SEVERITY failure;
+            WHEN OTHERS => letterOut <= "01000001";
         END CASE;
     END PROCESS;
 END ARCHITECTURE rtl;
