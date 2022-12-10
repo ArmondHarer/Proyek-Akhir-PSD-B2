@@ -1,29 +1,24 @@
-library IEEE;
-use IEEE.std_logic_1164.all;
-use IEEE.numeric_std.all;
+LIBRARY IEEE;
+USE IEEE.std_logic_1164.ALL;
+USE IEEE.numeric_std.ALL;
 
-use work.EnigmaConstants.all;
+USE work.EnigmaConstants.ALL;
 USE work.EnigmaTypes.ALL;
 
-entity Plugboard is
-    port (
-        clk   : in std_logic;
-        --readwrite : in std_logic;
-        letter_in  : in  std_logic_vector(7 downto 0) := "01000001";
-	letter_out : out std_logic_vector(7 downto 0)
+ENTITY Plugboard IS
+    PORT (
+        letter_in : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        letter_out : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
-end entity Plugboard;
+END ENTITY Plugboard;
 
-architecture Behavioral of Plugboard is
-        signal indexnum : integer := 1;
-        constant plugboardConst :PLUGBOARD_CONFIG := PLUGBOARDMAP;
-begin
+ARCHITECTURE Behavioral OF Plugboard IS
+    -- SIGNAL indexnum : INTEGER := 1;
+    CONSTANT plugboardConst : PLUGBOARD_CONFIG := PLUGBOARDMAP;
+BEGIN
 
-    digantibiargeror : process(clk)
-	begin
-		indexnum <= to_integer(unsigned(letter_in)) mod 65;
-		letter_out <= plugboardConst(indexnum);
-	end process;
-    
-
-end architecture;
+    plugboard_proc : PROCESS (letter_in)
+    BEGIN
+        letter_out <= plugboardConst(to_integer(unsigned(letter_in)) MOD 65);
+    END PROCESS;
+END ARCHITECTURE;
