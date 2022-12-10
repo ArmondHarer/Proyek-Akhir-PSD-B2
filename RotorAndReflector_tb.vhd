@@ -41,12 +41,10 @@ BEGIN
 
     tb_proc : PROCESS
     BEGIN
-        INP <= "01001011";
-        WAIT FOR 10 ps;
         FOR i IN 65 TO 90 LOOP
             REPORT "i=" & INTEGER'image(i);
             INP <= STD_LOGIC_VECTOR(to_unsigned(i, INP'length));
-            WAIT FOR 10 ps;
+            WAIT FOR 10 ns;
         END LOOP;
         WAIT;
     END PROCESS;
