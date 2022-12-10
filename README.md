@@ -15,7 +15,8 @@ Our design is based on this [Python](https://www.101computing.net/enigma/) sourc
 ## How it works
 When user enters the input it will pass a several component, the first one is the plugboard. The plugboard allowed the user to connect pairs of letters, so that when one letter was entered, the signal would go through the plugboard component and be replaced with the pair letter that is configured in the configuration file before passing through the rotors and the electrical circuit. After that the signal would go through the rotor array to scramble the signal further before arriving in the reflector which reflects the signal back to the rotor array from the opposite side. Finally, the signal go through the plugboard once more and can be read directly or passed to an encoder which can be displayed on a 16-segment display.
 ![16-Segment Display](assets/16-Segment2.jpg)
-Our design has 3 states, INPUTTING
+Our design has 3 states, INPUT, SCRAMBLE, and OUTPUT.
+![FSM DIAGRAM](assets/State-Diagram.jpg)
 
 ### Keyboard
 The keyboard works as an input device that receives input from the user. It receives the input in `Data_in: IN std_logic_vector(7 downto 0);` and outputs it in `Data_out: OUT std_logic_vector(7 downto 0);`. It receive input as an ASCII binary from A to Z. Input other than that will invoke 
