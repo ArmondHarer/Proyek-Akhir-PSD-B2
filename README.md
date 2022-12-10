@@ -120,10 +120,11 @@ END IF;
 
 ```
 
-## How to use
+## How to use 
+**NOTE : In order for the VHDL code to compile properly, please use Modelsim 2008**
 Our design works by receiving binary ASCII input signal in form of `std_logic_vector(7 downto 0)` represented by the . The program then pass it towards the entire mechanism and ended in 16-Segment display encoder which can be displayed in 16-Segment display. User can also change the enigma configuration by modifying the constants located in `EnigmaConstants.vhd` or by swapping the rotor order in  `RotorAndReflector.vhd`. 
 
-If user wants to encrypt and decrypt a message, they have to do two different instances of simulation first to encrypt then reset the simulation and enter the output from the first instance to decrypt.
+If user wants to encrypt and decrypt a message, they have to do two different instances of simulation first to encrypt then reset the simulation and enter the output from the first instance to decrypt. 
 
 ## Testing
 We validated our design by running two instances simultaneously. To encrypt and decrypt. We give input to the former and passes the ouput directly to the latter. If both input and output matches in pair then our design is considered a success.
