@@ -44,8 +44,6 @@ BEGIN
         FOR i IN 65 TO 90 LOOP
             REPORT "i=" & INTEGER'image(i);
             INP <= STD_LOGIC_VECTOR(to_unsigned(i, INP'length));
-            wait for 10 ns;
-            INP <= OUTP;
             WAIT FOR 10 ns;
         END LOOP;
         WAIT;
