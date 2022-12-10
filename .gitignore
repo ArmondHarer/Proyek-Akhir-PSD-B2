@@ -5,5 +5,5 @@ transcript
 /work
 /*db
 /output_files
-*.qpf
-*.qsf
+*.q*
+.DS_Store
