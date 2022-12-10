@@ -128,4 +128,4 @@ If user wants to encrypt and decrypt a message, they have to do two different in
 We validated our design by running two instances simultaneously. To encrypt and decrypt. We give input to the former and passes the ouput directly to the latter. If both input and output matches in pair then our design is considered a success.
 ## Result
 Our testing result shows that the input and output are indeed matched in pairs, that means our design works as we intended it to. Below is the simulation result.
-![Testbench result](assets/enigma-tb.jpg)
+![Testbench result](assets/enigma-tb2.jpg)
