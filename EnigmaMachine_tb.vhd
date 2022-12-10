@@ -47,13 +47,13 @@ architecture tb of EnigmaMachine_tb is
         tb_process : process 
         begin
             letter_in <= "01001011";
-            WAIT FOR 50 ns;
+            WAIT FOR 10 ns;
             FOR i IN 65 TO 90 LOOP
                 REPORT "i=" & INTEGER'image(i);
                 letter_in <= STD_LOGIC_VECTOR(to_unsigned(i, letter_in'length));
-                wait for ns;
+                wait for 10 ns;
                 letter_in <= letter_out;
-                WAIT FOR 10 ns;
+                WAIT FOR 50 ns;
             END LOOP;
             assert false report "Simulation finished" severity failure;
         END PROCESS;
