@@ -10,7 +10,7 @@ entity EnigmaMachine is
         letter_in: IN STD_LOGIC_VECTOR(7 downto 0);
         --readWrite: IN std_logic;
         letter_out: OUT std_logic_vector(7 DOWNTO 0);
-        letter_write: out std_logic_vector(7 downto 0);
+        --letter_write: out std_logic_vector(7 downto 0);
         Segment_out : out std_logic_vector(15 downto 0);
         error: OUT std_logic
 
@@ -42,7 +42,6 @@ architecture rtl of EnigmaMachine is
         --readwrite : in std_logic;
 
         letter_in  : in  std_logic_vector(7 downto 0); 
-        letter_write  : in  std_logic_vector(7 downto 0);
 		letter_out : out std_logic_vector(7 downto 0)
     );
     END COMPONENT;
@@ -59,7 +58,7 @@ architecture rtl of EnigmaMachine is
     signal bufferKeyboardOutput: STD_LOGIC_VECTOR(7 DOWNTO 0);
     signal bufferPlugboardOutput: STD_LOGIC_VECTOR(7 downto 0);
     signal bufferRotorAndReflectorOutput: STD_LOGIC_VECTOR(7 DOWNTO 0);
-    signal bufferSegmentOut: STD_LOGIC(15 downto 0);
+    signal bufferSegmentOut: STD_LOGIC_VECTOR(15 downto 0);
 
 begin
     sync_proc: process(clk, nextState)
@@ -69,7 +68,7 @@ begin
     end process sync_proc;
 
     data_input: Keyboard 
-        port map(CLK => CLK, data_in => letter_in, Data_out => bufferKeyboardOutput);
+        port map(CLK => CLK, data_in => letter_in, Data_out => bufferKeyboardOutput, error => error);
     plugboard_input: Plugboard 
         port map(clk => CLK, letter_in => bufferKeyboardOutput, letter_out => bufferPlugboardOutput);
     rotorAndReflector_input: RotorAndReflector
@@ -81,8 +80,8 @@ begin
     begin 
         case presentState is
             when INPUT => 
-                letter_out <= null;
-                Segment_out <= NULL;
+                --letter_out <= null;
+                --Segment_out <= NULL;
                 if error = '1' then nextState <= INPUT;
                 elsif error = '0' then nextState <= SCRAMBLE;
                 end if;
@@ -97,6 +96,6 @@ begin
         
 
     end process comb_proc;
-    letter_out <= bufferRotorAndReflectorOutput;
+    --letter_out <= bufferRotorAndReflectorOutput;
     
 end architecture rtl;
