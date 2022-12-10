@@ -26,35 +26,63 @@ architecture tb of EnigmaMachine_tb is
         );
     end COMPONENT;
     signal CLK: STD_LOGIC := '0';
-    signal letter_in: STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
-    --signal readWrite: std_logic := '0';
-    --signal plugboard_write: STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
-    signal letter_out: std_logic_vector(7 DOWNTO 0) := (others => '0');
-    signal Segment_out : std_logic_vector(15 downto 0) := (others => '0');
+    signal letter_in_encrypt: STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
+    signal letter_in_decrypt: STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
+    signal letter_out_encrypt: std_logic_vector(7 DOWNTO 0) := (others => '0');
+    signal letter_out_decrypt: std_logic_vector(7 DOWNTO 0) := (others => '0');
+    signal Segment_out_encrypt : std_logic_vector(15 downto 0) := (others => '0');
+    signal Segment_out_decrypt : std_logic_vector(15 downto 0) := (others => '0');
     signal error: std_logic := '0';
 
     begin
-        UUT : EnigmaMachine port map (
+        UUT_ENCRYPT : EnigmaMachine port map (
             CLK => CLK,
-            letter_in => letter_in,
+            letter_in => letter_in_encrypt,
             --readWrite => readWrite,
             --plugboard_write => plugboard_write,
-            letter_out => letter_out,
-            Segment_out => Segment_out,
+            letter_out => letter_out_encrypt,
+            Segment_out => Segment_out_encrypt,
+            error => error
+        );
+
+        UUT_DECRYPT : EnigmaMachine port map (
+            CLK => CLK,
+            letter_in => letter_in_decrypt,
+            --readWrite => readWrite,
+            --plugboard_write => plugboard_write,
+            letter_out => letter_out_decrypt,
+            Segment_out => Segment_out_decrypt,
             error => error
         );
 
         tb_process : process 
         begin
-            letter_in <= "01001011";
+            letter_in_encrypt <= "01001110";
             WAIT FOR 10 ns;
-            FOR i IN 65 TO 90 LOOP
-                REPORT "i=" & INTEGER'image(i);
-                letter_in <= STD_LOGIC_VECTOR(to_unsigned(i, letter_in'length));
-                wait for 10 ns;
-                letter_in <= letter_out;
-                WAIT FOR 50 ns;
-            END LOOP;
+
+            letter_in_decrypt <= letter_out_encrypt;
+            letter_in_encrypt <= "01000001";
+            WAIT FOR 10 ns;
+            
+            letter_in_decrypt <= letter_out_encrypt;
+            letter_in_encrypt <= "01010101";
+            WAIT FOR 10 ns;
+
+            letter_in_decrypt <= letter_out_encrypt;
+            letter_in_encrypt <= "01000110";
+            WAIT FOR 10 ns;
+
+            letter_in_decrypt <= letter_out_encrypt;
+            letter_in_encrypt <= "01000001";
+            WAIT FOR 10 ns;
+
+            letter_in_decrypt <= letter_out_encrypt;
+            letter_in_encrypt <= "01001100";
+            WAIT FOR 10 ns;
+
+            letter_in_decrypt <= letter_out_encrypt;
+            wait for 10 ns;
+
             assert false report "Simulation finished" severity failure;
         END PROCESS;
     
