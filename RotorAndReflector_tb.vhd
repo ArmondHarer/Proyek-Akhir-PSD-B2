@@ -18,25 +18,46 @@ ARCHITECTURE rtl OF RotorAndReflector_tb IS
             output : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
         );
     END COMPONENT;
-    SIGNAL INP : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
-    SIGNAL OUTP_ROTOR_RIGHT : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
-    SIGNAL OUTP_ROTOR_MID : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
-    SIGNAL OUTP_ROTOR_LEFT : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
-    SIGNAL OUTP_REFLECTOR : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
-    SIGNAL OUTP_REV_ROTOR_LEFT : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
-    SIGNAL OUTP_REV_ROTOR_MID : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
-    SIGNAL OUTP : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL INP_enc : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_ROTOR_RIGHT_enc : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_ROTOR_MID_enc : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_ROTOR_LEFT_enc : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_REFLECTOR_enc : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_REV_ROTOR_LEFT_enc : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_REV_ROTOR_MID_enc : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_enc : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    
+    SIGNAL INP_dec : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_ROTOR_RIGHT_dec : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_ROTOR_MID_dec : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_ROTOR_LEFT_dec : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_REFLECTOR_dec : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_REV_ROTOR_LEFT_dec : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_REV_ROTOR_MID_dec : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
+    SIGNAL OUTP_dec : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => '0');
 BEGIN
-    UUT : RotorAndReflector
+    UUT_ENCRYPT : RotorAndReflector
     PORT MAP(
-        input => INP,
-        outputRotorRight => OUTP_ROTOR_RIGHT,
-        outputRotorMid => OUTP_ROTOR_MID,
-        outputRotorLeft => OUTP_ROTOR_LEFT,
-        outputReflector => OUTP_REFLECTOR,
-        outputRevRotorLeft => OUTP_REV_ROTOR_LEFT,
-        outputRevRotorMid => OUTP_REV_ROTOR_MID,
-        output => OUTP
+        input => INP_enc,
+        outputRotorRight => OUTP_ROTOR_RIGHT_enc,
+        outputRotorMid => OUTP_ROTOR_MID_enc,
+        outputRotorLeft => OUTP_ROTOR_LEFT_enc,
+        outputReflector => OUTP_REFLECTOR_enc,
+        outputRevRotorLeft => OUTP_REV_ROTOR_LEFT_enc,
+        outputRevRotorMid => OUTP_REV_ROTOR_MID_enc,
+        output => OUTP_enc
+    );
+
+    UUT_DECRYPT : RotorAndReflector
+    PORT MAP(
+        input => INP_dec,
+        outputRotorRight => OUTP_ROTOR_RIGHT_dec,
+        outputRotorMid => OUTP_ROTOR_MID_dec,
+        outputRotorLeft => OUTP_ROTOR_LEFT_dec,
+        outputReflector => OUTP_REFLECTOR_dec,
+        outputRevRotorLeft => OUTP_REV_ROTOR_LEFT_dec,
+        outputRevRotorMid => OUTP_REV_ROTOR_MID_dec,
+        output => OUTP_dec
     );
 
     tb_proc : PROCESS
@@ -53,16 +74,31 @@ BEGIN
         -- INP <= "01001110";
         -- WAIT FOR 10 ns;
         -- String "CVLDG"
-        INP <= "01000100";
+        INP_enc <= "01000101";
         WAIT FOR 10 ns;
-        INP <= "01001101";
+
+        INP_dec <= OUTP_enc;
+        INP_enc <= "01001110";
         WAIT FOR 10 ns;
-        INP <= "01000010";
+
+        INP_dec <= OUTP_enc;    
+        INP_enc <= "01001001";
         WAIT FOR 10 ns;
-        INP <= "01001010";
+
+        INP_dec <= OUTP_enc;
+        INP_enc <= "01000111";   
         WAIT FOR 10 ns;
-        INP <= "01001000";
+        
+        INP_dec <= OUTP_enc;
+        INP_enc <= "01001101";        
         WAIT FOR 10 ns;
+
+        INP_dec <= OUTP_enc;
+        INP_enc <= "01000001";
+        WAIT FOR 10 ns;
+        INP_dec <= OUTP_enc;
+        WAIT FOR 10 ns;
+
 
         -- WAIT FOR 10 ns;
         -- FOR i IN 65 TO 90 LOOP

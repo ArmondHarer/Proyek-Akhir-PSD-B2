@@ -15,7 +15,7 @@ architecture tb of Plugboard_tb is
 
     component Plugboard is
         port (
-            clk   : in std_logic;
+        --clk   : in std_logic;
         --readwrite : in std_logic;
         letter_in  : in  std_logic_vector(7 downto 0) := "01000001";
 	    letter_out : out std_logic_vector(7 downto 0)
@@ -32,7 +32,6 @@ architecture tb of Plugboard_tb is
 
     begin
         UUT : Plugboard port map (
-            CLK => CLK,
             letter_in => letter_in,
             --readWrite => readWrite,
             --plugboard_write => plugboard_write,
