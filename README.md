@@ -15,12 +15,117 @@ Our design is based on this [Python](https://www.101computing.net/enigma/) sourc
 ## How it works
 When user enters the input it will pass a several component, the first one is the plugboard. The plugboard allowed the user to connect pairs of letters, so that when one letter was entered, the signal would go through the plugboard component and be replaced with the pair letter that is configured in the configuration file before passing through the rotors and the electrical circuit. After that the signal would go through the rotor array to scramble the signal further before arriving in the reflector which reflects the signal back to the rotor array from the opposite side. Finally, the signal go through the plugboard once more and can be read directly or passed to an encoder which can be displayed on a 16-segment display.
 
+### Keyboard
+The keyboard works as an input device that receives input from the user. It receives the input in `Data_in: IN std_logic_vector(7 downto 0);` and outputs it in `Data_out: OUT std_logic_vector(7 downto 0);`. It receive input as an ASCII binary from A to Z. Input other than that will invoke 
+```
+else
+    error <= '1';
+    Data_out(7 downto 0) <= "00000000";
+end if;
+```
+resulting in error and outputs 00000000.
+                
+
+### Plugboard
+The plugboard functions to swap pairs of two letters based on configuration stored in 'EnigmaConstants.vhd' the plugboard configuration is shown below
+```
+CONSTANT PLUGBOARDMAP : PLUGBOARD_CONFIG := (
+        -- TSCEDMGHRJNZFKWVQIBAUPOYXL
+        -- AT BS DE FM IR KN LZ OW PV XY
+        "01010100", "01010011", "01000011", "01000101", "01000100", "01001101", "01000111",
+        "01001000", "01010010", "01001010", "01001110", "01011010", "01000110", "01001011",
+        "01010111", "01010110", "01010001", "01001001", "01000010", "01000001", "01010101",
+        "01010000", "01001111", "01011001", "01011000", "01001100"
+    );
+```
+Our design works by accessing the index from the configuration array above by converting the input ASCII bit to integer and modulo it with 65, the result is the index of that corresponding input which in it contains the other letter pair to be swap. To do that operation we used
+```
+letter_out <= plugboardConst(to_integer(unsigned(letter_in)) MOD 65);
+```
+
+### Rotor and reflector
+The rotor works by receiving input and passes it through a series of rotor. The rotors have their each configuration to scramble letters listed below
+```
+CONSTANT ROTOR_A_MAP : ROTOR_CONFIG := (
+        -- "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        -- "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
+        "01000101", "01001011", "01001101", "01000110", "01001100", "01000111", "01000100",
+        "01010001", "01010110", "01011010", "01001110", "01010100", "01001111", "01010111",
+        "01011001", "01001000", "01011000", "01010101", "01010011", "01010000", "01000001",
+        "01001001", "01000010", "01010010", "01000011", "01001010"
+    );
+
+    CONSTANT ROTOR_B_MAP : ROTOR_CONFIG := (
+        -- "AJDKSIRUXBLHWTMCQGZNPYFVOE"
+        "01000001", "01001010", "01000100", "01001011", "01010011", "01001001", "01010010",
+        "01010101", "01011000", "01000010", "01001100", "01001000", "01010111", "01010100",
+        "01001101", "01000011", "01010001", "01000111", "01011010", "01001110", "01010000",
+        "01011001", "01000110", "01010110", "01001111", "01000101"
+    );
+
+    CONSTANT ROTOR_C_MAP : ROTOR_CONFIG := (
+        -- "BDFHJLCPRTXVZNYEIWGAKMUSQO"
+        "01000010", "01000100", "01000110", "01001000", "01001010", "01001100", "01000011",
+        "01010000", "01010010", "01010100", "01011000", "01010110", "01011010", "01001110",
+        "01011001", "01000101", "01001001", "01010111", "01000111", "01000001", "01001011",
+        "01001101", "01010101", "01010011", "01010001", "01001111"
+    );
+    CONSTANT ROTOR_D_MAP : ROTOR_CONFIG := (
+        -- "ESOVPZJAYQUIRHXLNFTGKDCMWB"
+        "01000101", "01010011", "01001111", "01010110", "01010000", "01011010", "01001010",
+        "01000001", "01011001", "01010001", "01010101", "01001001", "01010010", "01001000",
+        "01011000", "01001100", "01001110", "01000110", "01010100", "01000111", "01001011",
+        "01000100", "01000011", "01001101", "01010111", "01000010"
+    );
+
+```
+The types of rotor used is determined with this code.
+```
+IF rotor_type = "00" THEN
+	ROTOR_MAP <= ROTOR_A;
+ELSIF rotor_type = "01" THEN
+	ROTOR_MAP <= ROTOR_B;
+ELSIF rotor_type = "10" THEN
+	ROTOR_MAP <= ROTOR_C;
+ELSE
+	ROTOR_MAP <= ROTOR_D;
+END IF;
+```
+
+After the signal has gone through all three rotors it will enter the reflector and be reflected back towards the rotors. Because of this we need to know where is the direction of the signal. We used code below to check the direction and reversed the mapping for each rotor.
+```
+IF direction = '0' THEN
+	FOR idx IN 0 TO 25 LOOP
+	    IF letterIn = ALPHABETS(idx) THEN
+			letterOut <= ROTOR_MAP((idx + offset) MOD 26);
+			EXIT;
+		END IF;
+	END LOOP;
+-- If direction is '1' or backwards
+ELSE
+    FOR idx IN 0 TO 25 LOOP
+		IF letterIn = ROTOR_MAP((idx + offset) MOD 26) THEN
+			letterOut <= ALPHABETS((idx) MOD 26);
+			EXIT;
+		END IF;
+	END LOOP;
+END IF;
+```
+For each input, the first rotor will turn, changing the scramble pattern of the signal. We use this code to make the first rotor turn for each input.
+```
+IF firstRotor = '1' AND direction = '1' THEN
+	offset := (offset + 1) MOD 26;
+END IF;
+
+```
+
 ## How to use
-Our design works by receiving binary ASCII input signal in form of `std_logic_vector(7 downto 0)` represented by the . The program then pass it towards the entire mechanism and ended in 16-Segment display encoder which can be displayed in 16-Segment display. User can also change the enigma configuration by modifying the constants located in `EnigmaConstants.vhd`.
+Our design works by receiving binary ASCII input signal in form of `std_logic_vector(7 downto 0)` represented by the . The program then pass it towards the entire mechanism and ended in 16-Segment display encoder which can be displayed in 16-Segment display. User can also change the enigma configuration by modifying the constants located in `EnigmaConstants.vhd` or by swapping the rotor order in  `RotorAndReflector.vhd`. 
+
+If user wants to encrypt and decrypt a message, they have to do two different instances of simulation first to encrypt then reset the simulation and enter the output from the first instance to decrypt.
 
 ## Testing
-We validated our design by using a testbench file that generates A to Z alphabet that will be passed to the input. Our design is considered successful if the input and the output match in pairs.
+We validated our design by inputting a set of character manually and note the output characters, then we reset the simulation and input the output from the previous simulation. If the two result match, then it can be conluded our design is working as we intended.
 
 ## Result
 Our testing result shows that the input and output are indeed matched in pairs, that means our design works as we intended it to. Below is the simulation result.
-![Top level testbench simulation](assets/enigma-tb.jpg)
