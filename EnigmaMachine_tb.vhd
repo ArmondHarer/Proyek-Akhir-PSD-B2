@@ -51,7 +51,9 @@ architecture tb of EnigmaMachine_tb is
             FOR i IN 65 TO 90 LOOP
                 REPORT "i=" & INTEGER'image(i);
                 letter_in <= STD_LOGIC_VECTOR(to_unsigned(i, letter_in'length));
-                WAIT FOR 50 ps;
+                wait for 100 ps;
+                letter_in <= letter_out;
+                WAIT FOR 100 ps;
             END LOOP;
             assert false report "Simulation finished" severity failure;
         END PROCESS;
