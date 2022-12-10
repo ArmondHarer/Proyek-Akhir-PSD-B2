@@ -41,11 +41,35 @@ BEGIN
 
     tb_proc : PROCESS
     BEGIN
-        FOR i IN 65 TO 90 LOOP
-            REPORT "i=" & INTEGER'image(i);
-            INP <= STD_LOGIC_VECTOR(to_unsigned(i, INP'length));
-            WAIT FOR 10 ns;
-        END LOOP;
+        -- String "MAKAN"
+        -- INP <= "01001101";
+        -- WAIT FOR 10 ns;
+        -- INP <= "01000001";
+        -- WAIT FOR 10 ns;
+        -- INP <= "01001011";
+        -- WAIT FOR 10 ns;
+        -- INP <= "01000001";
+        -- WAIT FOR 10 ns;
+        -- INP <= "01001110";
+        -- WAIT FOR 10 ns;
+        -- String "CVLDG"
+        INP <= "01000100";
+        WAIT FOR 10 ns;
+        INP <= "01001101";
+        WAIT FOR 10 ns;
+        INP <= "01000010";
+        WAIT FOR 10 ns;
+        INP <= "01001010";
+        WAIT FOR 10 ns;
+        INP <= "01001000";
+        WAIT FOR 10 ns;
+
+        -- WAIT FOR 10 ns;
+        -- FOR i IN 65 TO 90 LOOP
+        --     REPORT "i=" & INTEGER'image(i);
+        --     INP <= STD_LOGIC_VECTOR(to_unsigned(i, INP'length));
+        --     WAIT FOR 10 ns;
+        -- END LOOP;
         WAIT;
     END PROCESS;
 END ARCHITECTURE;

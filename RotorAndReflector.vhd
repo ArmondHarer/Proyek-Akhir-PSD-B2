@@ -18,7 +18,6 @@ END ENTITY;
 ARCHITECTURE rtl OF RotorAndReflector IS
     COMPONENT rotor IS
         GENERIC (
-            initialPos : INTEGER := 25;
             notchPos : INTEGER := 0;
             firstRotor : STD_LOGIC := '1';
             rotor_type : STD_LOGIC_VECTOR(1 DOWNTO 0);
@@ -27,7 +26,10 @@ ARCHITECTURE rtl OF RotorAndReflector IS
         PORT (
             --Input and outputs are in ASCII binary
             letterIn : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-            letterOut : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+            letterOut : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+            -- Curr position
+            initialPos : IN INTEGER;
+            lastPos : OUT INTEGER
         );
     END COMPONENT;
     SIGNAL rotorBufferRight : STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -37,23 +39,29 @@ ARCHITECTURE rtl OF RotorAndReflector IS
     SIGNAL revRotorBufferRight : STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL revRotorBufferMid : STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL revRotorBufferLeft : STD_LOGIC_VECTOR(7 DOWNTO 0);
+    SIGNAL rightMotorPos : INTEGER;
+    SIGNAL midMotorPos : INTEGER;
+    SIGNAL leftMotorPos : INTEGER;
+    SIGNAL revRightMotorPos : INTEGER := 0;
+    SIGNAL revMidMotorPos : INTEGER := 0;
+    SIGNAL revLeftMotorPos : INTEGER := 0;
 BEGIN
     -- Rightmost rotor component
     rotor_right : Rotor
-    GENERIC MAP(initialPos => 1, notchPos => 0, firstRotor => '1', rotor_type => "00", direction => '0')
-    PORT MAP(letterIn => input, letterOut => rotorBufferRight);
+    GENERIC MAP(notchPos => 0, firstRotor => '1', rotor_type => "00", direction => '0')
+    PORT MAP(letterIn => input, letterOut => rotorBufferRight, initialPos => revRightMotorPos, lastPos => rightMotorPos);
     outputRotorRight <= rotorBufferRight;
 
     -- Middle rotor component
     rotor_middle : Rotor
-    GENERIC MAP(initialPos => 1, notchPos => 0, firstRotor => '0', rotor_type => "01", direction => '0')
-    PORT MAP(letterIn => rotorBufferRight, letterOut => rotorBufferMid);
+    GENERIC MAP(notchPos => 0, firstRotor => '0', rotor_type => "01", direction => '0')
+    PORT MAP(letterIn => rotorBufferRight, letterOut => rotorBufferMid, initialPos => revMidMotorPos, lastPos => midMotorPos);
     outputRotorMid <= rotorBufferMid;
 
     -- Left rotor component
     rotor_left : Rotor
-    GENERIC MAP(initialPos => 1, notchPos => 0, firstRotor => '0', rotor_type => "10", direction => '0')
-    PORT MAP(letterIn => rotorBufferMid, letterOut => rotorBufferLeft);
+    GENERIC MAP(notchPos => 0, firstRotor => '0', rotor_type => "10", direction => '0')
+    PORT MAP(letterIn => rotorBufferMid, letterOut => rotorBufferLeft, initialPos => revLeftMotorPos, lastPos => leftMotorPos);
     outputRotorLeft <= rotorBufferLeft;
 
     -- The reflector component
@@ -63,19 +71,19 @@ BEGIN
 
     -- Reverse left rotor component
     rev_rotor_left : Rotor
-    GENERIC MAP(initialPos => 1, notchPos => 0, firstRotor => '0', rotor_type => "10", direction => '1')
-    PORT MAP(letterIn => reflectorBuffer, letterOut => revRotorBufferLeft);
+    GENERIC MAP(notchPos => 0, firstRotor => '0', rotor_type => "10", direction => '1')
+    PORT MAP(letterIn => reflectorBuffer, letterOut => revRotorBufferLeft, initialPos => leftMotorPos, lastPos => revLeftMotorPos);
     outputRevRotorLeft <= revRotorBufferLeft;
 
     -- Reverse middle rotor component
     rev_rotor_middle : Rotor
-    GENERIC MAP(initialPos => 1, notchPos => 0, firstRotor => '0', rotor_type => "01", direction => '1')
-    PORT MAP(letterIn => revRotorBufferLeft, letterOut => revRotorBufferMid);
+    GENERIC MAP(notchPos => 0, firstRotor => '0', rotor_type => "01", direction => '1')
+    PORT MAP(letterIn => revRotorBufferLeft, letterOut => revRotorBufferMid, initialPos => midMotorPos, lastPos => revMidMotorPos);
     outputRevRotorMid <= revRotorBufferMid;
 
     -- Reverse rightmost rotor component
     rev_rotor_right : Rotor
-    GENERIC MAP(initialPos => 1, notchPos => 0, firstRotor => '1', rotor_type => "00", direction => '1')
-    PORT MAP(letterIn => revRotorBufferMid, letterOut => revRotorBufferRight);
+    GENERIC MAP(notchPos => 0, firstRotor => '1', rotor_type => "00", direction => '1')
+    PORT MAP(letterIn => revRotorBufferMid, letterOut => revRotorBufferRight, initialPos => rightMotorPos, lastPos => revRightMotorPos);
     output <= revRotorBufferRight;
 END ARCHITECTURE;
