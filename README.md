@@ -125,7 +125,7 @@ Our design works by receiving binary ASCII input signal in form of `std_logic_ve
 If user wants to encrypt and decrypt a message, they have to do two different instances of simulation first to encrypt then reset the simulation and enter the output from the first instance to decrypt.
 
 ## Testing
-We validated our design by running two instances simultaneously. To encrypt and decrypt. We give input to the latter and passes the ouput directly
+We validated our design by running two instances simultaneously. To encrypt and decrypt. We give input to the former and passes the ouput directly to the latter. If both input and output matches in pair then our design is considered a success.
 ## Result
 Our testing result shows that the input and output are indeed matched in pairs, that means our design works as we intended it to. Below is the simulation result.
 ![Testbench result](assets/enigma-tb.jpg)
