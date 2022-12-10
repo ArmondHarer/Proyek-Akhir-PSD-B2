@@ -38,7 +38,7 @@ architecture rtl of EnigmaMachine is
 
     COMPONENT Plugboard IS
     port (
-        clk   : in std_logic;
+        --clk   : in std_logic;
         --readwrite : in std_logic;
 
         letter_in  : in  std_logic_vector(7 downto 0); 
@@ -71,11 +71,11 @@ begin
     data_input: Keyboard 
         port map(CLK => CLK, data_in => letter_in, Data_out => bufferKeyboardOutput, error => error);
     first_plugboard_input: Plugboard 
-        port map(clk => CLK, letter_in => bufferKeyboardOutput, letter_out => bufferFirstPlugboardOutput);
+        port map(letter_in => bufferKeyboardOutput, letter_out => bufferFirstPlugboardOutput);
     rotorAndReflector_input: RotorAndReflector
         port map(input => bufferFirstPlugboardOutput, output => bufferRotorAndReflectorOutput);
     second_plugboard_input: Plugboard
-        port map(clk => CLK, letter_in => bufferRotorAndReflectorOutput, letter_out => bufferSecondPlugboardOutput);
+        port map(letter_in => bufferRotorAndReflectorOutput, letter_out => bufferSecondPlugboardOutput);
     Sixteen_Segment_input: Enigma_16segment_decoder
         port map(D => bufferRotorAndReflectorOutput, Segment_out => bufferSegmentOut);
     
