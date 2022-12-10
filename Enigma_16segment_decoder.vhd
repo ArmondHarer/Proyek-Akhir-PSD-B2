@@ -42,6 +42,7 @@ begin
     when "01011000" => Segment_out <= "0101010100000000";  --X
     when "01011001" => Segment_out <= "1000100010111100";  --Y
     when "01011010" => Segment_out <= "0100010000110011";  --Z
+    when OTHERS => Segment_out <= "0000000000000000";
     end case;
 end process;
     
