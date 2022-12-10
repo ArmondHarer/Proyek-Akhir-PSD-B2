@@ -56,8 +56,9 @@ architecture rtl of EnigmaMachine is
     type state_type is (INPUT, SCRAMBLE, OUTPUT);
 	signal presentState, nextState : state_type;
     signal bufferKeyboardOutput: STD_LOGIC_VECTOR(7 DOWNTO 0);
-    signal bufferPlugboardOutput: STD_LOGIC_VECTOR(7 downto 0);
+    signal bufferFirstPlugboardOutput: STD_LOGIC_VECTOR(7 downto 0);
     signal bufferRotorAndReflectorOutput: STD_LOGIC_VECTOR(7 DOWNTO 0);
+    signal bufferSecondPlugboardOutput: STD_LOGIC_VECTOR(7 downto 0);
     signal bufferSegmentOut: STD_LOGIC_VECTOR(15 downto 0);
 
 begin
@@ -69,10 +70,12 @@ begin
 
     data_input: Keyboard 
         port map(CLK => CLK, data_in => letter_in, Data_out => bufferKeyboardOutput, error => error);
-    plugboard_input: Plugboard 
-        port map(clk => CLK, letter_in => bufferKeyboardOutput, letter_out => bufferPlugboardOutput);
+    first_plugboard_input: Plugboard 
+        port map(clk => CLK, letter_in => bufferKeyboardOutput, letter_out => bufferFirstPlugboardOutput);
     rotorAndReflector_input: RotorAndReflector
-        port map(input => bufferPlugboardOutput, output => bufferRotorAndReflectorOutput);
+        port map(input => bufferFirstPlugboardOutput, output => bufferRotorAndReflectorOutput);
+    second_plugboard_input: Plugboard
+        port map(clk => CLK, letter_in => bufferRotorAndReflectorOutput, letter_out => bufferSecondPlugboardOutput);
     Sixteen_Segment_input: Enigma_16segment_decoder
         port map(D => bufferRotorAndReflectorOutput, Segment_out => bufferSegmentOut);
     
@@ -88,7 +91,7 @@ begin
             when SCRAMBLE =>
                 nextState <= OUTPUT;
             when OUTPUT =>
-                letter_out <= bufferRotorAndReflectorOutput;
+                letter_out <= bufferSecondPlugboardOutput;
                 Segment_out <= bufferSegmentOut;
                 nextState <= INPUT;
             end case;
