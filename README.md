@@ -134,3 +134,6 @@ We validated our design by running two instances simultaneously. To encrypt and 
 Our testing result shows that the input and output are indeed matched in pairs, that means our design works as we intended it to. Below is the simulation result.
 ![Testbench result](assets/enigma-tb2.jpg)
 
+## Presentation Video
+[You can watch the presentation video here](https://youtu.be/ZCbdlaLRMjE)
+**NOTE: Video is in Bahasa Indonesia**
